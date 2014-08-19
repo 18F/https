@@ -8,7 +8,7 @@ This repository contains our:
 * **technical standards**, e.g. SSL/nginx/CDN configuration
 * **external collaboration** on broadening SSL deployment and quality
 
-_Technical Note_: "SSL" is used here as a synonym for [**TLS**](http://en.wikipedia.org/wiki/Transport_Layer_Security) and [**HTTPS**](http://en.wikipedia.org/wiki/HTTP_Secure).
+_Technical Note_: We use "SSL" in its common form, as shorthand for [**TLS**](http://en.wikipedia.org/wiki/Transport_Layer_Security) and [**HTTPS**](http://en.wikipedia.org/wiki/HTTP_Secure).
 
 
 ### Public domain
