@@ -1,10 +1,10 @@
 ## SSL at 18F
 
-18F is an all-SSL shop: all of our [websites](https://18f.gsa.gov/) and [APIs](https://github.com/18F/api-standards#always-use-https) enforce encryption. We do this no matter how static or dynamic the content, and no matter how sensitive the information may appear to be.
+18F is an all-SSL shop: all of our [websites](https://18f.gsa.gov/) and [APIs](https://github.com/18F/api-standards#always-use-https) enforce encryption. We do this no matter how static or dynamic the content, and no matter how sensitive the service's information may appear to be.
 
 This repository contains our:
 
-* **operational practices** ,e.g. key generation, cert rotation
+* **operational practices**, e.g. key generation, cert rotation
 * **technical standards**, e.g. SSL/nginx/CDN configuration
 * **external collaboration** on broadening SSL deployment and quality
 
