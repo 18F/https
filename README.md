@@ -4,9 +4,11 @@
 
 This repository contains our:
 
-* **operational practices**, e.g. key generation, cert rotation
-* **technical standards**, e.g. SSL/nginx/CDN configuration
+* **standards and practices**, e.g. key generation, SSL/nginx/CDN configuration
+* **knowledge base** on SSL deployment in the US government
 * **external collaboration** on broadening SSL deployment and quality
+
+This has _just started_ and has nothing yet. But it will! And please contribute!
 
 _Technical Note_: We use "SSL" in its common form, as shorthand for [**TLS**](http://en.wikipedia.org/wiki/Transport_Layer_Security) and [**HTTPS**](http://en.wikipedia.org/wiki/HTTP_Secure).
 
