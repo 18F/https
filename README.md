@@ -5,8 +5,8 @@
 This repository contains our:
 
 * **standards and practices**, e.g. key generation, SSL/nginx/CDN configuration
-* **knowledge base** on SSL deployment in the US government
-* **external collaboration** on broadening SSL deployment and quality
+* **research and knowledge base** on deploying SSL on the web today
+* **discussion and collaboration** with people inside and outside of the government
 
 This has _just started_ and has nothing yet. But it will! And please contribute!
 
