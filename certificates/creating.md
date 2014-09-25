@@ -94,17 +94,65 @@ After that screen, you should be done, and you should see the lovely flowchart b
 
 ![4-done](images/4-done.png)
 
-#### Creating the certificate chain
+The certificate should be mailed to 18F's public contact email address. In this author's experience, and for reasons unknown, you may have to visit the internal Google Group for this email alias, rather than count on it being correctly forwarded to you.
 
-[ WIP ]
+#### Create the certificate chain
+
+Comodo PositiveSSL will email you a zip file containing the certificate, two intermediate certificates(`COMODORSAAddTrustCA.crt` and `COMODORSADomainValidationSecureServerCA.crt`), and the root certificate (`AddTrustExternalCARoot.crt`). You can _ignore_ the root certificate, it is not needed for our purposes.
+
+Create a certificate chain by concatenating the domain cert and its intermediates:
+
+```bash
+cat your-site.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-chain.crt
+```
 
 #### Installing the certificate and private key
 
-[ WIP ]
+Where you install the certificate depends on where you are terminating SSL (in other words, the first server a visiting user connects to). Generally speaking, you might need to provide the certificate and key to nginx, or to an Elastic Load Balancer (ELB), or to a CDN (e.g. CloudFront or Cloudflare).
 
-#### Documenting the certificate and CSR
+##### In nginx
+
+On 18F's Ubuntu AMI, SSL certificates and keys should go in `/etc/nginx/ssl/keys`. Then update your site's vhost's nginx config to point to your decrypted private key, and your certificate chain.
+
+For a `*.18f.us` domain, that may look like this:
+
+```
+ssl_certificate      /etc/nginx/ssl/keys/star.18f.us-chain.crt;
+ssl_certificate_key  /etc/nginx/ssl/keys/star.18f.us.key;
+```
+
+**Important**: before restarting the server, test out whether the key and certificate have been prepared and installed successfully by running:
+
+```bash
+sudo nginx -t
+```
+
+If you get no errors, then restart the server:
+
+```bash
+sudo service nginx restart
+```
+
+##### In an ELB
 
 [ TBD ]
+
+##### In a CDN
+
+[ TBD ]
+
+#### Publishing the certificate and CSR
+
+We record our certificates and CSRs in a public directory, for ease of management and versioning. Certificate and CSR information is insensitive, and is less easily lost when put in a public repository.
+
+When you are done obtaining a certificate, installing it, and verifying that it's working, publish the following files into `sites/`:
+
+* The certificate request (`.csr`) file.
+* The certificate (`.crt`) for the domain.
+* The full certificate chain (`.crt`) for the domain and its intermediates.
+* A `README.md` containing why the cert was bought, and who purchased it when.
+
+For an example, see [`sites/star.18f.us`](sites/star.18f.us).
 
 #### Resources
 
