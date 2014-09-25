@@ -14,6 +14,10 @@ If you're an 18F employee and want a new SSL certificate, read the **[certificat
 
 We have a wildcard certificate for staging domains of the form `*.18f.us`, so you do not need a new certificate for those domains. (This only applies to third-level domains like `x.18f.us`. Fourth-level domains like `x.y.18f.us` cannot use this certificate.)
 
+### Publishing our certificates
+
+We store our SSL certificates, certificate requests, and some accompanying metadata in the [`sites/`](sites) directory. Accompanying private keys are, of course, not in this repository.
+
 ### Public domain
 
 This project is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING](CONTRIBUTING.md):
