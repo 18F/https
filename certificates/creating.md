@@ -68,6 +68,8 @@ Common Name (e.g. server FQDN or YOUR name) []:18f.gsa.gov
 Email Address []:
 ```
 
+**Make sure to change the Common Name field above to match the domain you are issuing the certificate for.**
+
 This will create a `.csr` file that is suitable for submitting to the CA you are using to issue the certificate.
 
 #### Purchasing the certificate
@@ -145,11 +147,25 @@ sudo service nginx restart
 
 ##### In an ELB
 
-**[ TBD ]**
+To use the key and certificate in an ELB in Amazon Web Services:
 
-##### In a CDN
+* First, make a certificate chain that uses **only** the intermediates. The intermediates can be found in [`sites/`](../sites/).
 
-**[ TBD ]**
+```bash
+cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-intermediates.crt
+```
+
+Then, use the [AWS CLI tool](https://aws.amazon.com/cli/), and run the following command. (Replace each value with the names and files specific to your cert.)
+
+```bash
+aws iam upload-server-certificate \
+  --server-certificate-name a-new-cert-name \
+  --certificate-body file://./your-site.crt \
+  --private-key file://./your-site.key \
+  --certificate-chain file://./your-site-intermediates.crt
+```
+
+_TODO:_ Add screenshots for in-browser approach when adding certificates to specific ELBs.
 
 #### Publishing the certificate and CSR
 
