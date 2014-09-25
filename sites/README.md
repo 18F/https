@@ -16,4 +16,4 @@ Since 18F currently uses [Namecheap's domain-validated PositiveSSL certificates]
 * `COMODORSADomainValidationSecureServerCA.crt` - Intermediate #1: directly signs our client certificates, chains to Intermediate #2.
 * `COMODORSAAddTrustCA.crt` - Intermediate #2: signs Intermediate #1, chains to root certificate.
 
-The root certificate is an AddTrust CA root, but we should not include this in our certificate chains, as browsers will not use it during certificate chain verification. (Browsers will look in their trusted root store instead.)
+The root certificate is by AddTrust ("AddTrust External CA Root"), but we should not include this in our certificate chains, as browsers will not use it during certificate chain verification. (Browsers will look in their trusted root store instead.)
