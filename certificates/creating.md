@@ -6,8 +6,11 @@ This is 18F's documentation for their SSL certificate creation, purchase, and in
 * Back up that key immediately please!
 * Generate a certificate request for the desired domain.
 * Purchase a new certificate.
+* Create a full certificate chain.
+* Install the certificate and key.
+* Publish the cert and CSR in a public repository.
 
-All newly purchased 18F SSL certificates should go through this process
+All newly purchased 18F SSL certificates should go through this process.
 
 #### Generating a private key
 
