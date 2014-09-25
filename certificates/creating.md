@@ -16,7 +16,7 @@ All newly purchased 18F SSL certificates should go through this process.
 
 The first step to a new certificate is always to create a new private key. **Every certificate should have its own unique associated private key.**
 
-We use [RSA(https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a **4096-bit key length** (2048 is acceptable, but 4096 preferred).
+We use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a **4096-bit key length** (2048 is acceptable, but 4096 is preferred).
 
 Create an encrypted key with the following command. You will be asked to choose a passphrase which you will use any time you wish to decrypt the key.
 
@@ -30,9 +30,17 @@ Decrypt the key. You will use the passphrase you picked in the previous command.
 openssl rsa -in your-site-encrypted.key -out your-site.key
 ```
 
+If you ever need to encrypt the key again, run:
+
+```bash
+openssl rsa -aes256 -in your-site.key -out your-site-encrypted.key
+```
+
 #### Backing up the private key
 
-[ TBD ]
+Right now, we're just backing up private keys, encrypted with a passphrase, in a private S3 bucket. Talk to DevOps for bucket access, and if you need to send the passphrase to someone, use [Fugacious](https://fugacio.us) to do it ephemerally.
+
+This is a **temporary process**, while we work out a more scalable and reasonable key management system.
 
 #### Creating the certificate request
 
@@ -135,11 +143,11 @@ sudo service nginx restart
 
 ##### In an ELB
 
-[ TBD ]
+**[ TBD ]**
 
 ##### In a CDN
 
-[ TBD ]
+**[ TBD ]**
 
 #### Publishing the certificate and CSR
 
