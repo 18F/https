@@ -2,13 +2,14 @@
 
 This is 18F's documentation for their SSL certificate creation, purchase, and installation process. The order of operations is basically:
 
-* Generate a 4096-bit private key.
-* Back up that key immediately please!
-* Generate a certificate request for the desired domain.
-* Purchase a new certificate.
-* Create a full certificate chain.
-* Install the certificate and key.
-* Publish the cert and CSR in a public repository.
+* [Generate a new private key](#generating-a-private-key).
+* [Back up that key immediately please!](#backing-up-the-private-key)
+* [Generate a certificate request](#creating-the-certificate-request) for the desired domain.
+* [Purchase a new certificate](#purchasing-the-certificate).
+* [Actually issue the certificate](#actually-getting-the-certificate).
+* [Create the certificate chain](#create-the-certificate-chain).
+* [Install the certificate chain and key](#installing-the-certificate-and-private-key).
+* [Publish the cert and CSR](#publishing-the-certificate-and-csr) in this public repository.
 
 All newly purchased 18F SSL certificates should go through this process.
 
