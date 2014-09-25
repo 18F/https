@@ -38,7 +38,7 @@ openssl rsa -aes256 -in your-site.key -out your-site-encrypted.key
 
 #### Backing up the private key
 
-Right now, we're just backing up private keys, encrypted with a passphrase, in a private S3 bucket. Talk to DevOps for bucket access, and if you need to send the passphrase to someone, use [Fugacious](https://fugacio.us) to do it ephemerally.
+Right now, we're just backing up **passphrase-encrypted private keys** in a private S3 bucket. Talk to DevOps for bucket access, and if you need to send the passphrase to someone, use [Fugacious](https://fugacio.us) to do it ephemerally.
 
 This is a **temporary process**, while we work out a more scalable and reasonable key management system.
 
