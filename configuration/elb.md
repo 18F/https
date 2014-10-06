@@ -8,7 +8,7 @@ You **have control** over:
 
 * certificate signing algorithm (e.g. SHA-256)
 * private key algorithm and bit-length (e.g. RSA 4096-bit or ECDSA 256-bit)
-* [HTTP Strict Transport Security](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security)
+* [HTTP Strict Transport Security](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) (if the header is set on backend instances)
 * supported TLS/SSL protocol versions
 * allowed ciphersuites
 
