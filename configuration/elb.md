@@ -22,7 +22,7 @@ You **do not have control** over:
 
 Because of this, it's recommended that you terminate SSL on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
 
-The next section discusses the downsides of ELBs in more detail, so that if you do use an ELB to terminate, you know what you're giving up.
+If you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
 
 ### Downsides of ELBs
 
