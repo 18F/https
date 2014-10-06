@@ -115,4 +115,5 @@ AWS comes with a few "predefined" configurations, but does not allow you to save
 - [ ] DES-CBC3-SHA
 - [X] ECDHE-RSA-RC4-SHA
 - [X] RC4-SHA
-- `[all below this unchecked]`
+
+... everything below this should stay unchecked ...
