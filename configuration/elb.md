@@ -2,7 +2,7 @@
 
 (**[Jump right to the ELB configuration choices.](#configuration-choices)**)
 
-If you use an Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
+If you use an Amazon Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
 
 You **have control** over:
 
