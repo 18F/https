@@ -55,13 +55,13 @@ OCSP stapling is not a new technology, but it's still not widely implemented. Th
 
 #### SPDY and NPN support
 
-Amazon ELBs do not enable SPDY or Next Protocol Negotiation.
+Amazon ELBs do not enable SPDY or Next Protocol Negotiation (NPN).
 
 **[SPDY](https://en.wikipedia.org/wiki/SPDY)** extends HTTP and deliver much better performance, especially for websites with many assets. SPDY allows efficient multiplexing and pipelining over a single TCP socket -- besides being overall faster, this also deprecates image spriting and domain sharding for delivering static assets.
 
 SPDY was originally designed by Google and now used as the basis for the draft [HTTP/2](https://http2.github.io/faq/) spec. When HTTP/2 is finalized, 18F hopes to take immediate advantage of it.
 
-**[Next Protocol Negotiation](https://technotes.googlecode.com/git/nextprotoneg.html) (NPN) is a way for servers and browsers to agree in advance on what protocols are supported, so that things like SPDY can be enabled opportunistically. NPN will eventually [being replaced by ALPN](https://www.imperialviolet.org/2013/03/20/alpn.html).
+**[NPN](https://technotes.googlecode.com/git/nextprotoneg.html)) is a way for servers and browsers to agree in advance on what protocols are supported, so that things like SPDY can be enabled opportunistically. NPN will eventually [being replaced by ALPN](https://www.imperialviolet.org/2013/03/20/alpn.html).
 
 In Chrome, NPN support is required to turn on TLS False Start, which saves a TLS round trip and [makes connections faster](http://blog.chromium.org/2011/05/ssl-falsestart-performance-results.html). Firefox supports TLS False Start, but it's not clear under what conditions it's enabled.
 
