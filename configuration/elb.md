@@ -69,12 +69,12 @@ The nginx SPDY plugin enables NPN automatically, so if you're using [18F's nginx
 
 ### Configuration choices
 
-AWS comes with a few "predefined" configurations, but does not allow you to save your own predefined configurations. They must be set every time an ELB is created.
-
 Below is 18F's standard ELB configuration for TLS termination. This configuration:
 
 * **Removes SSLv3 support.** SSLv2 is less secure than TLSv1.0 and up &mdash; and if it's supported at all, then an active attacker can force even users who are able to connect over TLS to downgrade to a SSLv3 connection. For this reason, we've disabled it entirely. _Note_: This eliminates support for Internet Explorer 6.
 * **Supports robust forward secrecy.** Under this set of cipher choices, forward secrecy is enabled for nearly every browser you would expect to support. There is one non-forward-secret cipher choice, `RC4-SHA`, which is a carveout specifically for IE8 on Windows XP. All other browsers should choose a forward secret ciphersuite.
+
+AWS comes with a few "predefined" configurations, but does not allow you to save your own predefined configurations. They must be set every time an ELB is created.
 
 ##### Protocols enabled
 
