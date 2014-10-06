@@ -4,7 +4,7 @@
 
 If you use an Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
 
-You have control over:
+You **have control** over:
 
 * certificate signing algorithm (e.g. SHA-256)
 * private key algorithm and bit-length (e.g. RSA 4096-bit or ECDSA 256-bit)
@@ -12,7 +12,7 @@ You have control over:
 * supported TLS/SSL protocol versions
 * allowed ciphersuites
 
-You do not have control over:
+You **do not have control** over:
 
 * [DH parameters](#limited-dh-parameters) (locked to 1024-bits, which is bad)
 * [OCSP stapling](#ocsp-stapling)
