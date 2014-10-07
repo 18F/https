@@ -166,7 +166,8 @@ aws iam upload-server-certificate \
   --certificate-chain file://./your-site-intermediates.crt
 ```
 
-_TODO:_ Add screenshots for in-browser approach when adding certificates to specific ELBs.
+Make sure to refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/ssl-standards/blob/master/configuration/elb.md) when setting up your ELB.
+
 
 #### Publishing the certificate and CSR
 
