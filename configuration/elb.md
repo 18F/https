@@ -50,8 +50,8 @@ Without OCSP stapling, browsers which do revocation checking (e.g. Firefox, but 
 
 OCSP stapling is not a new technology, but it's still not widely implemented. There are a couple of standards in the works that would make OCSP better and more useful:
 
-* [OCSP Must-Staple](http://www.ietf.org/mail-archive/web/tls/current/msg10323.html) ([IETF](http://tools.ietf.org/html/draft-hallambaker-tlsfeature-02))
-* [OCSP Multi-Stapling](https://casecurity.org/2013/05/07/an-introduction-to-ocsp-multi-stapling/) ([IETF](http://datatracker.ietf.org/doc/rfc6961/)).
+* [OCSP Must-Staple](http://www.ietf.org/mail-archive/web/tls/current/msg10323.html) ([IETF](http://tools.ietf.org/html/draft-hallambaker-tlsfeature-02)) - Sort of like HSTS for OCSP, allows clients to hard-fail if the stapled response is invalid and not fall back to traditional OCSP retrieval.
+* [OCSP Multi-Stapling](https://casecurity.org/2013/05/07/an-introduction-to-ocsp-multi-stapling/) ([IETF](http://datatracker.ietf.org/doc/rfc6961/)) - Support for stapling OCSP responses for intermediate certificates, not just client certificates.
 
 #### SPDY and NPN support
 
