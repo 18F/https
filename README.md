@@ -18,6 +18,16 @@ We have a wildcard certificate for staging domains of the form `*.18f.us`, so yo
 
 We store our SSL certificates, certificate requests, and some accompanying metadata in the [`sites/`](sites) directory. Accompanying private keys are, of course, not in this repository.
 
+### Deploying and configuring certificates
+
+We have a **[baseline nginx SSL configuration](configuration/nginx)** for our EC2 instances that receive HTTP requests.
+
+For sites that use an Elastic Load Balancer (ELB) to terminate SSL, we have a **[model SSL configuration for ELBs](configuration/elb.md)** and some analysis of the tradeoffs you face by using them.
+
+### Miscellaneous research
+
+For now, we have a pile of **[general research and resources](resources.md)** on technologies relevant to SSL.
+
 ### Public domain
 
 This project is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING](CONTRIBUTING.md):
