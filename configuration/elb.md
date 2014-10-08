@@ -76,6 +76,8 @@ Below is 18F's standard ELB configuration for TLS termination. This configuratio
 
 AWS comes with a few "predefined" configurations, but does not allow you to save your own predefined configurations. They must be set every time an ELB is created.
 
+**CloudFormation users:** Use this **[sample ELB configuration](elb-cloudformation.json)** for CloudFormation.
+
 ##### Protocols enabled
 
 - [ ] Protocol-SSLv2
