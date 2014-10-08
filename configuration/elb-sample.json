@@ -1,0 +1,72 @@
+{
+  "ELB" : {
+    "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+    "Properties" : {
+      "SecurityGroups" : [ { "Ref" : "SecurityGroup" } ],
+      "Subnets" : [
+        { "Ref" : "PublicSubnetA" },
+        { "Ref" : "PublicSubnetB" }
+      ],
+      "Instances": [
+        { "Ref": "WebServerA" },
+        { "Ref": "WebServerB" }
+      ],
+      "Listeners" : [ {
+        "LoadBalancerPort" : "80",
+        "InstancePort" : "80",
+        "Protocol" : "HTTP"
+      },
+      {
+        "LoadBalancerPort" : "443",
+        "InstancePort" : "443",
+        "Protocol" : "HTTPS",
+        "InstanceProtocol" : "HTTPS",
+        "SSLCertificateId" : { "Fn::Join" : ["", [
+          "arn:aws:iam::",
+          { "Ref" : "AWS::AccountId" },
+          ":server-certificate/certificate"
+          ]]
+        }
+      }],
+      "Policies" : [
+      {
+        "PolicyName" : "MySSLNegotiationPolicy",
+        "PolicyType" : "SSLNegotiationPolicyType",
+        "Attributes" : [
+          { "Name" : "Protocol-TLSv1", "Value" : "true" },
+          { "Name" : "Protocol-TLSv1.1", "Value" : "true" },
+          { "Name" : "Protocol-TLSv1.2", "Value" : "true" },
+          { "Name" : "Protocol-SSLv2", "Value" : "false" },
+          { "Name" : "Protocol-SSLv3", "Value" : "false" },
+          { "Name" : "Server-Defined-Cipher-Order", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES128-GCM-SHA256", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES128-GCM-SHA256", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES128-SHA256", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES128-SHA256", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES128-SHA", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES128-SHA", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES256-GCM-SHA384", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES256-GCM-SHA384", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES256-SHA384", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES256-SHA384", "Value" : "true" },
+          { "Name" : "ECDHE-RSA-AES256-SHA", "Value" : "true" },
+          { "Name" : "ECDHE-ECDSA-AES256-SHA", "Value" : "true" },
+          { "Name" : "AES128-GCM-SHA256", "Value" : "false" },
+          { "Name" : "AES128-SHA256", "Value" : "false" },
+          { "Name" : "AES128-SHA", "Value" : "false" },
+          { "Name" : "AES256-GCM-SHA384", "Value" : "false" },
+          { "Name" : "AES256-SHA256", "Value" : "false" },
+          { "Name" : "AES256-SHA", "Value" : "false" },
+          { "Name" : "DHE-RSA-AES128-SHA", "Value" : "true" },
+          { "Name" : "DHE-DSS-AES128-SHA", "Value" : "true" },
+          { "Name" : "CAMELLIA128-SHA", "Value" : "false" },
+          { "Name" : "EDH-RSA-DES-CBC3-SHA", "Value" : "false" },
+          { "Name" : "DES-CBC3-SHA", "Value" : "false" },
+          { "Name" : "ECDHE-RSA-RC4-SHA", "Value" : "true" },
+          { "Name" : "RC4-SHA", "Value" : "true" }
+        ],
+        "LoadBalancerPorts" : ["443"]
+      }]
+    }
+  }
+}
