@@ -2,7 +2,7 @@
 
 (**[Jump right to the ELB configuration choices.](#configuration-choices)**)
 
-If you use an Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
+If you use an Amazon Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
 
 You **have control** over:
 
@@ -22,7 +22,7 @@ You **do not have control** over:
 
 Because of this, it's recommended that you terminate SSL on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
 
-The next section discusses the downsides of ELBs in more detail, so that if you do use an ELB to terminate, you know what you're giving up.
+If you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
 
 ### Downsides of ELBs
 
@@ -50,8 +50,8 @@ Without OCSP stapling, browsers which do revocation checking (e.g. Firefox, but 
 
 OCSP stapling is not a new technology, but it's still not widely implemented. There are a couple of standards in the works that would make OCSP better and more useful:
 
-* [OCSP Must-Staple](http://www.ietf.org/mail-archive/web/tls/current/msg10323.html) ([IETF](http://tools.ietf.org/html/draft-hallambaker-tlsfeature-02))
-* [OCSP Multi-Stapling](https://casecurity.org/2013/05/07/an-introduction-to-ocsp-multi-stapling/) ([IETF](http://datatracker.ietf.org/doc/rfc6961/)).
+* [OCSP Must-Staple](http://www.ietf.org/mail-archive/web/tls/current/msg10323.html) ([IETF](http://tools.ietf.org/html/draft-hallambaker-tlsfeature-02)) - Sort of like HSTS for OCSP, allows clients to hard-fail if the stapled response is invalid and not fall back to traditional OCSP retrieval.
+* [OCSP Multi-Stapling](https://casecurity.org/2013/05/07/an-introduction-to-ocsp-multi-stapling/) ([IETF](http://datatracker.ietf.org/doc/rfc6961/)) - Support for stapling OCSP responses for intermediate certificates, not just client certificates.
 
 #### SPDY and NPN support
 
