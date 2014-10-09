@@ -8,9 +8,15 @@ It was created by Eric Mill, through the Department of Treasury's Entrust accoun
 
 This certificate chain, located at [`myra.treasury.gov-chain.crt`](myra.treasury.gov-chain.crt), uses 2 intermediates and a client cert:
 
-* [`entrust-intermediate-1.crt`](entrust-intermediate-1.crt)
-* [`entrust-intermediate-2.crt`](entrust-intermediate-2.crt)
 * [`myra.treasury.gov.crt`](myra.treasury.gov.crt)
+* [`entrust-intermediate-2.crt`](entrust-intermediate-2.crt)
+* [`entrust-intermediate-1.crt`](entrust-intermediate-1.crt)
+
+There's also:
+
+* [`entrust-intermediate-chain.crt`](entrust-intermediate-chain.crt) - Just the intermediate chain, suitable for use in an AWS ELB.
+* [`myra.treasury.gov-chain.crt`](myra.treasury.gov-chain.crt) - The full client + intermediates chain, suitable for use in nginx.
+* [`myra.treasury.gov.csr`](myra.treasury.gov.csr) - The original CSR used to create the certificate.
 
 #### Provisional certificate
 
