@@ -1,2 +1,5 @@
 /workspace
 todo.txt
+.ruby-version
+.python-version
+.DS_Store
