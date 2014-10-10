@@ -17,6 +17,7 @@ You **do not have control** over:
 * [DH parameters](#limited-dh-parameters) (locked to 1024-bits, which is bad)
 * [OCSP stapling](#ocsp-stapling)
 * [SPDY and NPN support](#spdy-and-npn-support)
+* [Secure client-initiated renegotiation](https://community.qualys.com/blogs/securitylabs/2011/10/31/tls-renegotiation-and-denial-of-service-attacks) (enabled, which may be bad)
 * choice of elliptic curve algorithm (locked to 256-bits, which is fine)
 * SSL TCP buffer sizes (haven't tested AWS' default)
 
