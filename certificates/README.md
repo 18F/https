@@ -73,6 +73,18 @@ Email Address []:
 
 This will create a `.csr` file that is suitable for submitting to the CA you are using to issue the certificate.
 
+**Just want a self-signed certificate?**
+
+If you just need a self-signed certificate that **will throw warnings in users' browsers**, you can create the certificate yourself:
+
+```bash
+openssl x509 -req -days 365 -in your-site.csr -signkey your-site.key -out your-site.crt
+```
+
+`your-site.crt` will be valid for a year, and doesn't need any intermediary certificates.
+
+Then you can skip ahead to [installing the certificate](#installing-the-certificate-and-private-key).
+
 #### Purchasing the certificate
 
 Currently, 18F is using [Namecheap](https://www.namecheap.com/security/ssl-certificates/domain-validation.aspx)'s domain validation certificates for our subdomain and wildcard certificates.
