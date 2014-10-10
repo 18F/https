@@ -20,18 +20,17 @@ We'll update our version and configuration of nginx to accommodate future versio
 
 ### Elliptic Curve certificates
 
-We'd like to use [certificates made using an elliptic curve keypair](https://blog.cloudflare.com/ecdsa-the-digital-signature-algorithm-of-a-better-internet). They are more performant, more likely to stand the test of time as RSA weakens, and client support for them seems reasonably broad.
+We'd like to use [elliptic curve certificates](https://blog.cloudflare.com/ecdsa-the-digital-signature-algorithm-of-a-better-internet). They are more performant, and are more likely to stand the test of time as RSA weakens.
 
-But client support with ECDSA certificates isn't as well researched as we'd like, and engineering "fallback certificates" for older browsers isn't something we currently feel confident doing either. Google and Cloudflare are early adopters of ECDSA certificates, but it looks like they have some sort of fallback certificate strategy.
+Using ECDSA certificates removes support for Windows XP SP2 **and** SP3, cutting off Windows XP users entirely. Google and Cloudflare are early adopters of ECDSA certificates, but it looks like they have some sort of fallback certificate strategy.
 
 There is a standard method to distinguish what signature algorithms a client supports, and to thus send different certs per-client, but this is only supported in TLS v1.2. It might be possible, then, to default to an RSA cert for all clients, but for TLS v1.2 users who advertise support for ECDSA, show an ECDSA cert.
 
-For now, we are using RSA 4096-bit keypairs and certificates, signed with SHA-2, with EC ciphersuites enabled and using a 384-bit curve.
-
-We'll keep our eye on ECDSA, and plan to migrate our certificates to them when we have a confident strategy.
+ECDSA may be appropriate for projects that can acceptably remove support for Windows XP.
 
 EC references:
 
+* https://www.ssllabs.com/ssltest/clients.html
 * https://serverfault.com/questions/585784/if-i-get-a-certificate-signed-for-ecdsa-will-older-browsers-be-able-to-use-rsa
 * https://security.stackexchange.com/questions/43360/is-possible-that-a-tls-server-send-more-than-one-certificate-to-the-client-for-t
 * https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography
