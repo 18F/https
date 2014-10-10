@@ -1,6 +1,6 @@
 ### `myra.treasury.gov`
 
-This certificate was created for `myra.treasury.gov`, to host the live site for [MyRA](https://myra.treasury.gov).
+This certificate was created for `myra.treasury.gov`, to host the live site for [myRA](https://myra.treasury.gov).
 
 It was created by Eric Mill, through the Department of Treasury's Entrust account, on October 9, 2014.
 
