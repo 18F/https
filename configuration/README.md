@@ -1,6 +1,6 @@
-## Configuring SSL/TLS
+## Configuring TLS
 
-There are 3 general ways you might terminate a SSL/TLS connection here, each of which will be configured differently:
+There are 3 general ways you might terminate a TLS connection here, each of which will be configured differently:
 
 * An [EC2 instance](#terminating-on-an-ec2-instance) directly.
 * An [Elastic Load Balancer](#terminating-on-an-elastic-load-balancer).

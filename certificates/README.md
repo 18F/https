@@ -1,6 +1,6 @@
-### So you want a new SSL certificate
+### So you want a new TLS certificate
 
-This is 18F's documentation for their SSL certificate creation, purchase, and installation process. The order of operations is basically:
+This is 18F's documentation for their TLS certificate creation, purchase, and installation process. The order of operations is basically:
 
 1. [Generate a new private key](#generating-a-private-key).
 2. [Back up that key immediately please!](#backing-up-the-private-key)
@@ -11,7 +11,7 @@ This is 18F's documentation for their SSL certificate creation, purchase, and in
 7. [Install the certificate chain and key](#installing-the-certificate-and-private-key).
 8. [Publish the cert and CSR](#publishing-the-certificate-and-csr) in this public repository.
 
-All new 18F SSL certificates should go through this process.
+All new 18F TLS certificates should go through this process.
 
 #### Generating a private key
 
@@ -97,7 +97,7 @@ Certificates are purchased _before_ choosing the domain name or submitting the c
 
 These steps require a teammate with login access to the 18F Namecheap account. The below screenshots show the steps as captured during the creation of our `*.18f.us` wildcard certificate.
 
-Visit the [Namecheap SSL certificates list](https://manage.www.namecheap.com/myaccount/ssl-list.asp). You will see a list of already-created certificates, and any purchased-but-not-yet-created certificates. The below screenshot shows one of each:
+Visit the [Namecheap TLS certificates list](https://manage.www.namecheap.com/myaccount/ssl-list.asp). You will see a list of already-created certificates, and any purchased-but-not-yet-created certificates. The below screenshot shows one of each:
 
 ![0-your-ssl](images/0-your-ssl.png)
 
@@ -133,11 +133,11 @@ cat your-site.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustC
 
 #### Installing the certificate and private key
 
-Where you install the certificate depends on where you are terminating SSL (in other words, the first server a visiting user connects to). Generally speaking, you might need to provide the certificate and key to nginx, or to an Elastic Load Balancer (ELB), or to a CDN (e.g. CloudFront or Cloudflare).
+Where you install the certificate depends on where you are terminating TLS (in other words, the first server a visiting user connects to). Generally speaking, you might need to provide the certificate and key to nginx, or to an Elastic Load Balancer (ELB), or to a CDN (e.g. CloudFront or Cloudflare).
 
 ##### In nginx
 
-On 18F's Ubuntu AMI, SSL certificates and keys should go in `/etc/nginx/ssl/keys`. Then update your site's vhost's nginx config to point to your decrypted private key, and your certificate chain.
+On 18F's Ubuntu AMI, TLS certificates and keys should go in `/etc/nginx/ssl/keys`. Then update your site's vhost's nginx config to point to your decrypted private key, and your certificate chain.
 
 For a `*.18f.us` domain, that may look like this:
 
@@ -178,7 +178,7 @@ aws iam upload-server-certificate \
   --certificate-chain file://./your-site-intermediates.crt
 ```
 
-Make sure to refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/ssl-standards/blob/master/configuration/elb.md) when setting up your ELB.
+Make sure to refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/tls-standards/blob/master/configuration/elb.md) when setting up your ELB.
 
 
 #### Publishing the certificate and CSR

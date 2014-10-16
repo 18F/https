@@ -9,7 +9,7 @@ You **have control** over:
 * certificate signing algorithm (e.g. SHA-256)
 * private key algorithm and bit-length (e.g. RSA 4096-bit or ECDSA 256-bit)
 * [HTTP Strict Transport Security](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) (if the header is set on backend instances)
-* supported TLS/SSL protocol versions
+* supported TLS protocol versions
 * allowed ciphersuites
 
 You **do not have control** over:
@@ -19,9 +19,9 @@ You **do not have control** over:
 * [SPDY and NPN support](#spdy-and-npn-support)
 * [Secure client-initiated renegotiation](https://community.qualys.com/blogs/securitylabs/2011/10/31/tls-renegotiation-and-denial-of-service-attacks) (enabled, which may be bad)
 * choice of elliptic curve algorithm (locked to 256-bits, which is fine)
-* SSL TCP buffer sizes (haven't tested AWS' default)
+* TLS TCP buffer sizes (haven't tested AWS' default)
 
-Because of this, it's recommended that you terminate SSL on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
+Because of this, it's recommended that you terminate TLS on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
 
 If you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
 
@@ -39,15 +39,15 @@ From the [SSL Labs Server Rating Guide](https://www.ssllabs.com/downloads/SSL_Se
 
 Amazon ELBs default to 1024-bit DH parameters, which reduces the security and privacy of our TLS connections.
 
-nginx also defaults to 1024-bit, which is why 18F's nginx SSL configuration [points to a larger pre-generated dhparams file](https://github.com/18F/ssl-standards/blob/master/nginx/ssl.rules#L42-L47).
+nginx also defaults to 1024-bit, which is why 18F's nginx SSL configuration [points to a larger pre-generated dhparams file](https://github.com/18F/tls-standards/blob/master/nginx/ssl.rules#L42-L47).
 
 See [this question on dhparams](https://security.stackexchange.com/questions/38206/can-someone-explain-a-little-better-what-exactly-is-accomplished-by-generation-o), [this article on DH ciphersuites](http://vincent.bernat.im/en/blog/2011-ssl-perfect-forward-secrecy.html), and [this post on dhparams in Apache](http://blog.ivanristic.com/2013/08/increasing-dhe-strength-on-apache.html) for more details.
 
 #### OCSP Stapling
 
-Amazon ELBs do not support [OCSP stapling](https://en.wikipedia.org/wiki/OCSP_stapling). OCSP stapling is a method to check whether the SSL certificate for a website has been revoked, at the very same time as you connect to the website. The revocation data is "stapled" to the SSL response at connection time.
+Amazon ELBs do not support [OCSP stapling](https://en.wikipedia.org/wiki/OCSP_stapling). OCSP stapling is a method to check whether the TLS certificate for a website has been revoked, at the very same time as you connect to the website. The revocation data is "stapled" to the TLS response at connection time.
 
-Without OCSP stapling, browsers which do revocation checking (e.g. Firefox, but [not](https://www.imperialviolet.org/2011/03/18/revocation.html) [Chrome](https://www.imperialviolet.org/2014/04/19/revchecking.html)) have to hit a web API that SSL certificate authorities provide, that offer a list of revoked certificates. Doing this is slow, has poorer security properties, and is a privacy leak (as it shares browsing data with CAs).
+Without OCSP stapling, browsers which do revocation checking (e.g. Firefox, but [not](https://www.imperialviolet.org/2011/03/18/revocation.html) [Chrome](https://www.imperialviolet.org/2014/04/19/revchecking.html)) have to hit a web API that TLS certificate authorities provide, that offer a list of revoked certificates. Doing this is slow, has poorer security properties, and is a privacy leak (as it shares browsing data with CAs).
 
 OCSP stapling is not a new technology, but it's still not widely implemented. There are a couple of standards in the works that would make OCSP better and more useful:
 
@@ -72,7 +72,7 @@ The nginx SPDY plugin enables NPN automatically, so if you're using [18F's nginx
 
 Below is 18F's standard ELB configuration for TLS termination. This configuration:
 
-* **Removes SSLv3 support.** SSLv2 is less secure than TLSv1.0 and up &mdash; and if it's supported at all, then an active attacker can force even users who are able to connect over TLS to downgrade to a SSLv3 connection. For this reason, we've disabled it entirely. _Note_: This eliminates support for Internet Explorer 6.
+* **Removes SSLv3 support.** [SSLv3 is insecure](http://googleonlinesecurity.blogspot.com/2014/10/this-poodle-bites-exploiting-ssl-30.html), and if it's supported at all, then an active attacker can force even users who are able to connect over TLS to downgrade to a SSLv3 connection. For this reason, we've disabled it entirely.
 * **Supports robust forward secrecy.** Under this set of cipher choices, forward secrecy is enabled for nearly every browser you would expect to support. There is one non-forward-secret cipher choice, `RC4-SHA`, which is a carveout specifically for IE8 on Windows XP. All other browsers should choose a forward secret ciphersuite.
 
 AWS comes with a few "predefined" configurations, but does not allow you to save your own predefined configurations. They must be set every time an ELB is created.

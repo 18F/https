@@ -12,7 +12,7 @@ Amazon has said (as recently as [April 2014](https://forums.aws.amazon.com/threa
 
 ### SPDY and HTTP 2.0
 
-We compile in the [SPDY](https://en.wikipedia.org/wiki/SPDY) module for nginx, in addition to the SSL module. SPDY is a protocol, originally designed by Google, to extend HTTP and deliver much better performance, especially for websites with many assets.
+We compile in the [SPDY](https://en.wikipedia.org/wiki/SPDY) module for nginx, in addition to the TLS module. SPDY is a protocol, originally designed by Google, to extend HTTP and deliver much better performance, especially for websites with many assets.
 
 As of this writing, we're using nginx 1.6.0, with support for SPDY 3.1. SPDY is being used as the basis for work on [HTTP/2](http://http2.github.io/), which is still very much a draft, and not yet approaching finalization.
 
