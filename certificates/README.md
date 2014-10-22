@@ -201,7 +201,7 @@ aws iam upload-server-certificate \
   --server-certificate-name a-new-cert-name \
   --certificate-body file://./your-site.crt \
   --private-key file://./your-site.key \
-  --certificate-chain file://./your-site-intermediates.crt
+  --certificate-chain file://./your-site-intermediates.crt \
   --path /cloudfront/your-path/
 ```
 
