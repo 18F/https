@@ -13,13 +13,11 @@
 #    preload: indicates you want browsers to ship with HSTS preloaded for your domain.
 # 
 #    Submit your domain for preloading in browsers at: https://hstspreload.appspot.com
+add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload';
 
-add_header Strict-Transport-Security 'max-age=31536000';
-
-# If you can turn on HTTPS for *all* subdomains, use this version
-# and submit your domain for preloading:
-#
-# add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload';
+# If you *can't* guarantee that all subdomains above the one you're securing will be TLS,
+# then comment out the above and uncomment the line below.
+# add_header Strict-Transport-Security 'max-age=31536000';
 
 # Prefer certain ciphersuites, to enforce Forward Secrecy and avoid known vulnerabilities.
 #
