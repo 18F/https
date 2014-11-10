@@ -17,7 +17,9 @@ All new 18F TLS certificates should go through this process.
 
 The first step to a new certificate is always to create a new private key. **Every certificate should have its own unique associated private key.**
 
-We use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a **4096-bit key length** (2048 is acceptable, but 4096 is preferred).
+Our current preferred certificates use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a 4096-bit key length. 
+
+**If you plan to use CloudFront**, you will need to make a 2048-bit key, as that is CloudFront's [maximum key size](https://forums.aws.amazon.com/thread.jspa?threadID=148783).
 
 Create an encrypted key with the following command. You will be asked to choose a passphrase which you will use any time you wish to decrypt the key.
 
@@ -179,6 +181,31 @@ aws iam upload-server-certificate \
 ```
 
 Make sure to refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/tls-standards/blob/master/configuration/elb.md) when setting up your ELB.
+
+##### In CloudFront
+
+Similar to making an ELB, but a slightly different upload command.
+
+To use the key and certificate in CloudFront in Amazon Web Services:
+
+* First, make a certificate chain that uses **only** the intermediates. The intermediates can be found in [`sites/`](../sites/).
+
+```bash
+cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-intermediates.crt
+```
+
+Then, use the [AWS CLI tool](https://aws.amazon.com/cli/), and run the following command. (Replace each value with the names and files specific to your cert.) The `--path` **must** begin with `/cloudfront/`, and end with a path of your choice and a trailing slash, e.g. `/cloudfront/myra-production/`.
+
+```bash
+aws iam upload-server-certificate \
+  --server-certificate-name a-new-cert-name \
+  --certificate-body file://./your-site.crt \
+  --private-key file://./your-site.key \
+  --certificate-chain file://./your-site-intermediates.crt \
+  --path /cloudfront/your-path/
+```
+
+Make sure that when configuring your CloudFront distribution, you force HTTP traffic to be redirected to HTTPS traffic.
 
 
 #### Publishing the certificate and CSR
