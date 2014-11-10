@@ -2,7 +2,7 @@
 
 This certificate was created for `myra.treasury.gov`, to host the live site for [myRA](https://myra.treasury.gov).
 
-It was created by Eric Mill, through the Department of Treasury's Entrust account, on October 10, 2014.
+It was created by Eric Mill, through the Department of Treasury's Entrust account, on October 22, 2014.
 
 #### Entrust chain
 
@@ -20,6 +20,6 @@ There's also:
 
 #### Provisional certificate
 
-This is a provisional SSL certificate, that expires in 2 months, on **December 10, 2014**.
+This is a provisional SSL certificate, that expires in 2 months, on **December 23, 2014**.
 
-18F plans to issue a longer-lived SSL certificate through its own provider before **December 10, 2014**.
+18F plans to issue a longer-lived SSL certificate through its own provider before **December 23, 2014**.
