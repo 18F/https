@@ -26,7 +26,7 @@ For sites that use an Elastic Load Balancer (ELB) to terminate TLS, we have a **
 
 ### Miscellaneous research
 
-For now, we have a pile of **[general research and resources](resources.md)** on technologies relevant to TLS.
+For now, we have a pile of **[general research and resources](research.md)** on technologies relevant to TLS.
 
 ### Public domain
 
