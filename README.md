@@ -10,7 +10,7 @@ This repository contains our:
 
 ### Creating a new certificate
 
-If you're an 18F employee and want a new TLS certificate, read about our **[temporary certificate creation process](certificates)**. (We're in the process of switching to [SSLMate](https://sslmate.com/).)
+If you're an 18F employee and want a new TLS certificate, read about our **[certificate creation process](certificates)**. We've recently switched to [SSLMate](https://sslmate.com/), so the process has changed.
 
 We have a wildcard certificate for staging domains of the form `*.18f.us`, so you do not need a new certificate for those domains. (This only applies to third-level domains like `x.18f.us`. Fourth-level domains like `x.y.18f.us` cannot use this certificate.)
 
