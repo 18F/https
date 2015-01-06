@@ -37,7 +37,7 @@ openssl rsa -in your-site-encrypted.key -out your-site.key
 
 Right now, we're just backing up **passphrase-encrypted private keys** in a private S3 bucket. Talk to DevOps for bucket access, and if you need to send the passphrase to someone, use [Fugacious](https://fugacio.us) to do it ephemerally.
 
-This is a **temporary process**, while we work out a more scalable and reasonable key management system.
+This portion is still a **temporary process**, while we work out a more scalable and reasonable key management system.
 
 Encrypt the key again if needed by running:
 
@@ -45,7 +45,7 @@ Encrypt the key again if needed by running:
 openssl rsa -aes256 -in your-site.key -out your-site-encrypted.key
 ```
 
-Use `s3cmd` or similar to upload the encrypted key to the bucket, in its own directory.
+Use [s3cmd](http://s3tools.org/s3cmd) or similar to upload the encrypted key to the bucket, in its own directory.
 
 #### Creating the certificate request
 
@@ -89,49 +89,22 @@ Then you can skip ahead to [installing the certificate](#installing-the-certific
 
 #### Purchasing the certificate
 
-Currently, 18F is using [Namecheap](https://www.namecheap.com/security/ssl-certificates/domain-validation.aspx)'s domain validation certificates for our subdomain and wildcard certificates.
-
-You will need to speak with the 18F DevOps team to confirm the certificate you need, and the 18F Ops team to get purchase approval.
-
-Certificates are purchased _before_ choosing the domain name or submitting the certificate request, so it is possible to purchase certificates before creating the certificate request.
+18F uses [SSLMate](https://sslmate.com/) to purchase certificates. 18F DevOps has made a bulk purchase of certificates, so you now _do not_ require pre-approval to obtain one. It is possible to purchase certificates before creating the certificate request.
 
 #### Actually getting the certificate
 
-These steps require a teammate with login access to the 18F Namecheap account. The below screenshots show the steps as captured during the creation of our `*.18f.us` wildcard certificate.
+Prerequisites: 
 
-Visit the [Namecheap TLS certificates list](https://manage.www.namecheap.com/myaccount/ssl-list.asp). You will see a list of already-created certificates, and any purchased-but-not-yet-created certificates. The below screenshot shows one of each:
+* If your local OS is Mac OSX, you'll need [Homebrew](http://brew.sh/). On Linux, `apt-get`.
+* Login and password to the 18F SSLMate account. DevOps and Liaisons have credentials.
+* A terminal window.
 
-![0-your-ssl](images/0-your-ssl.png)
+Instructions:
 
-To create the certificate, click the "Activate Now" link. On the next page (shown below) select "nginx" for a web server, paste in the contents of the `.csr` file you created earlier, and click "Next".
-
-![1-csr-input](images/1-csr-input.png)
-
-Verify that the certificate request information is what you expected, and especially that the "Common Name" field shows the correct domain.
-
-We do not currently have any `@18f.us` email addresses set up. You will need to send the approver email to one of the email addresses listed on the `18f.us` WHOIS records. In the screenshot below, this is a particular staff member. For future requests, this will include 18F's public contact alias.
-
-![2-choose-email](images/2-choose-email.png)
-
-On the next page, you will choose the email address to receive the certificate. **Change this email address to be 18F's public contact address**, as shown below.
-
-![3-delivery-details](images/3-delivery-details.png)
-
-After that screen, you should be done, and you should see the lovely flowchart below.
-
-![4-done](images/4-done.png)
-
-The certificate should be mailed to 18F's public contact email address. In this author's experience, and for reasons unknown, you may have to visit the internal Google Group for this email alias, rather than count on it being correctly forwarded to you.
-
-#### Create the certificate chain
-
-Comodo PositiveSSL will email you a zip file containing the certificate, two intermediate certificates(`COMODORSAAddTrustCA.crt` and `COMODORSADomainValidationSecureServerCA.crt`), and the root certificate (`AddTrustExternalCARoot.crt`). You can _ignore_ the root certificate, it is not needed for our purposes.
-
-Create a certificate chain by concatenating the domain cert and its intermediates:
-
-```bash
-cat your-site.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-chain.crt
-```
+1. [Install the SSLMate client] and consult the [buying instructions](https://sslmate.com/help/buy).
+2. Run `$ sslmate buy HOSTNAME`
+3. Check to make sure the client successfully downloaded four files: the private key, the certificate, the certificate chain, and the concatenated certification.
+4. Celebrate! :beer:
 
 #### Installing the certificate and private key
 
