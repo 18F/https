@@ -17,9 +17,7 @@ All new 18F TLS certificates should go through this process.
 
 The first step to a new certificate is always to create a new private key. **Every certificate should have its own unique associated private key.**
 
-Our current preferred certificates use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a 4096-bit key length. 
-
-**If you plan to use CloudFront**, you will need to make a 2048-bit key, as that is CloudFront's [maximum key size](https://forums.aws.amazon.com/thread.jspa?threadID=148783).
+Our current preferred certificates use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a 2048-bit key length. 
 
 Create an encrypted key with the following command. You will be asked to choose a passphrase which you will use any time you wish to decrypt the key.
 
