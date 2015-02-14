@@ -1,174 +1,169 @@
-### So you want a new TLS certificate
+## So you want a new TLS certificate
 
-This is 18F's documentation for their TLS certificate creation, purchase, and installation process. The order of operations is basically:
+Most importantly:
 
-1. [Generate a new private key](#generating-a-private-key).
-2. [Back up that key immediately please!](#backing-up-the-private-key)
-3. [Generate a certificate request](#creating-the-certificate-request) for the desired domain.
-4. [Purchase a new certificate](#purchasing-the-certificate).
-5. [Actually issue the certificate](#actually-getting-the-certificate).
-6. [Create the certificate chain](#create-the-certificate-chain).
-7. [Install the certificate chain and key](#installing-the-certificate-and-private-key).
-8. [Publish the cert and CSR](#publishing-the-certificate-and-csr) in this public repository.
+**18F issues and manages the TLS certificates for all projects we host.**
 
-All new 18F TLS certificates should go through this process.
+Exceptions should be very rare, and for a very good reason. If we cannot issue and reissue our own TLS certificates for an application, then we cannot control whether the site remains available to visitors, and we cannot control the very first interaction any visiting browser or client has with that application.
 
-#### Generating a private key
+### Certificates over the command line
 
-The first step to a new certificate is always to create a new private key. **Every certificate should have its own unique associated private key.**
+We currently use a CLI-based certificate issuer — **[SSLMate](https://sslmate.com)** — to issue TLS certificates in a rapid, flexible, manageable way.
 
-Our current preferred certificates use [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) keys with a 2048-bit key length. 
+You will need to obtain **login credentials** from DevOps, and you should treat those credentials as you would any other production credentials at 18F.
 
-Create an encrypted key with the following command. You will be asked to choose a passphrase which you will use any time you wish to decrypt the key.
+18F DevOps has made a bulk purchase of certificates, so you now _do not_ require pre-approval from DevOps and Operations to obtain one.
 
-```bash
-openssl genrsa -aes256 -out your-site-encrypted.key 4096
-```
+Buy single-domain certificates as needed. However, please consult with DevOps before purchasing a wildcard certificate (e.g. `*.18f.us`), as they are on the expensive side.
 
-Decrypt the key. You will use the passphrase you picked in the previous command.
+If you've already installed and set up SSLMate, [skip ahead to the purchasing instructions](#set-up-the-domain)
+
+### Install SSLMate
+
+In OS X, install SSLMate through [homebrew](http://brew.sh):
 
 ```bash
-openssl rsa -in your-site-encrypted.key -out your-site.key
+brew install sslmate
 ```
 
-#### Backing up the private key
-
-Right now, we're just backing up **passphrase-encrypted private keys** in a private S3 bucket. Talk to DevOps for bucket access, and if you need to send the passphrase to someone, use [Fugacious](https://fugacio.us) to do it ephemerally.
-
-This is a **temporary process**, while we work out a more scalable and reasonable key management system.
-
-Encrypt the key again if needed by running:
+In Ubuntu 14.04 LTS, install SSLMate through `apt`:
 
 ```bash
-openssl rsa -aes256 -in your-site.key -out your-site-encrypted.key
+wget -P /etc/apt/sources.list.d https://sslmate.com/apt/ubuntu1404/sslmate.list
+wget -P /etc/apt/trusted.gpg.d https://sslmate.com/apt/ubuntu1404/sslmate.gpg
+apt-get update
+apt-get install sslmate
 ```
 
-Use `s3cmd` or similar to upload the encrypted key to the bucket, in its own directory.
+For Ubuntu 14.10, replace `ubuntu1404` with `ubuntu1410` above.
 
-#### Creating the certificate request
+Not working? Using Debian? Refer to the [official SSLMate install instructions](https://sslmate.com/help/install) for the latest details.
 
-Generate the certificate request, signed with SHA-256. You will be asked for details, explained below.
+### Log into SSLMate
+
+You'll need to get the SSLMate password from the DevOps team. Treat this password as you would any other production system credential at 18F.
+
+To log your client into 18F's SSLMate account, run `sslmate link` and enter the credentials:
+
+```
+$  sslmate link
+If you don't have an account yet, visit https://sslmate.com/signup
+Enter your SSLMate username: 18F-DevOps
+Enter your SSLMate password: *
+Linking account... Done.
+```
+
+### Set up the domain
+
+The domain or subdomain should be **fully delegated to 18F.** This means that 18F can administer the DNS for the domain in our own Route 53 infrastructure.
+
+* Create a "Hosted Zone" in Route 53 for the given domain or subdomain.
+* Amazon will automatically generate 4 nameserver addresses:
+
+![nameservers](images/route53.png)
+
+* Provide those 4 nameserver addresses to the holder of the parent domain. (The agency with the base domain, or the [.gov registry](https://www.dotgov.gov) in the case of a full domain.)
+* Tell the parent domain to set `NS` records for each of them. The parent domain should _not_ set an SOA record.
+
+You can also refer to the [official documentation](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for delegating a subdomain to Route 53.
+
+### Set up an email address
+
+(**Note**: work is ongoing to automate this process in its entirety, and to remove the email configuration and approval step.)
+
+To confirm domain ownership, SSLMate will need to email a special email address that uses either the base domain, _or the subdomain_ that you are purchasing the certificate for.
+
+There are a few acceptable prefixes. For example, `admin@myra.treasury.gov` can approve a certificate for `https://myra.treasury.gov`.
+
+How you set up this receiving email address is up to you. You will need to create `MX` records within Route 53 that point email to the service of your choice.
+
+18F has a [Mandrill](https://mandrillapp.com) account that you can configure to receive emails for a given domain. Consult with the DevOps team if that's how you want to do it.
+
+
+### Purchase the certificate
+
+Initiate a certificate purchase for a domain or subdomain:
 
 ```bash
-openssl req -new -sha256 -key your-site.key -out your-site.csr
+sslmate buy myra.treasury.gov
 ```
 
-You will be prompted to enter details for the CSR. You will need to fill in the country (US), the State (District of Columbia), the locality (Washington), the organization name (General Services Administration), the unit name (18F), and a blank email.
+SSLMate will ask you where to send the approval email. You will need to have [configured the domain for email](#set-up-an-email-address).
 
-You will also need to enter a Common Name, which should be the domain name you are getting the certificate issued for. Examples might be `18f.gsa.gov` or `*.18f.us`.
-
-Here's the CSR we used for `https://18f.gsa.gov`:
+(**Note**: work is ongoing to automate this process in its entirety, and to remove the email configuration and approval step.)
 
 ```
-Country Name (2 letter code) [AU]:US
-State or Province Name (full name) [Some-State]:District of Columbia
-Locality Name (eg, city) []:Washington
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:General Services Administration
-Organizational Unit Name (eg, section) []:18F
-Common Name (e.g. server FQDN or YOUR name) []:18f.gsa.gov
-Email Address []:
+Generating private key... Done.
+Generating CSR... Done.
+Submitting order...
+
+We need to send you an email to verify that you own this domain.
+Where should we send this email?
+
+1. webmaster@treasury.gov
+2. postmaster@treasury.gov
+3. hostmaster@treasury.gov
+4. administrator@treasury.gov
+5. admin@treasury.gov
+6. webmaster@myra.treasury.gov
+7. postmaster@myra.treasury.gov
+8. hostmaster@myra.treasury.gov
+9. administrator@myra.treasury.gov
+10. admin@myra.treasury.gov
+Enter 1-10 (or q to quit):
 ```
 
-**Make sure to change the Common Name field above to match the domain you are issuing the certificate for.**
-
-This will create a `.csr` file that is suitable for submitting to the CA you are using to issue the certificate.
-
-**Just want a self-signed certificate?**
-
-If you just need a self-signed certificate that **will throw warnings in users' browsers**, you can create the certificate yourself:
-
-```bash
-openssl x509 -req -days 365 -in your-site.csr -signkey your-site.key -out your-site.crt
-```
-
-`your-site.crt` will be valid for a year, and doesn't need any intermediary certificates.
-
-Then you can skip ahead to [installing the certificate](#installing-the-certificate-and-private-key).
-
-#### Purchasing the certificate
-
-Currently, 18F is using [Namecheap](https://www.namecheap.com/security/ssl-certificates/domain-validation.aspx)'s domain validation certificates for our subdomain and wildcard certificates.
-
-You will need to speak with the 18F DevOps team to confirm the certificate you need, and the 18F Ops team to get purchase approval.
-
-Certificates are purchased _before_ choosing the domain name or submitting the certificate request, so it is possible to purchase certificates before creating the certificate request.
-
-#### Actually getting the certificate
-
-These steps require a teammate with login access to the 18F Namecheap account. The below screenshots show the steps as captured during the creation of our `*.18f.us` wildcard certificate.
-
-Visit the [Namecheap TLS certificates list](https://manage.www.namecheap.com/myaccount/ssl-list.asp). You will see a list of already-created certificates, and any purchased-but-not-yet-created certificates. The below screenshot shows one of each:
-
-![0-your-ssl](images/0-your-ssl.png)
-
-To create the certificate, click the "Activate Now" link. On the next page (shown below) select "nginx" for a web server, paste in the contents of the `.csr` file you created earlier, and click "Next".
-
-![1-csr-input](images/1-csr-input.png)
-
-Verify that the certificate request information is what you expected, and especially that the "Common Name" field shows the correct domain.
-
-We do not currently have any `@18f.us` email addresses set up. You will need to send the approver email to one of the email addresses listed on the `18f.us` WHOIS records. In the screenshot below, this is a particular staff member. For future requests, this will include 18F's public contact alias.
-
-![2-choose-email](images/2-choose-email.png)
-
-On the next page, you will choose the email address to receive the certificate. **Change this email address to be 18F's public contact address**, as shown below.
-
-![3-delivery-details](images/3-delivery-details.png)
-
-After that screen, you should be done, and you should see the lovely flowchart below.
-
-![4-done](images/4-done.png)
-
-The certificate should be mailed to 18F's public contact email address. In this author's experience, and for reasons unknown, you may have to visit the internal Google Group for this email alias, rather than count on it being correctly forwarded to you.
-
-#### Create the certificate chain
-
-Comodo PositiveSSL will email you a zip file containing the certificate, two intermediate certificates(`COMODORSAAddTrustCA.crt` and `COMODORSADomainValidationSecureServerCA.crt`), and the root certificate (`AddTrustExternalCARoot.crt`). You can _ignore_ the root certificate, it is not needed for our purposes.
-
-Create a certificate chain by concatenating the domain cert and its intermediates:
-
-```bash
-cat your-site.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-chain.crt
-```
-
-#### Installing the certificate and private key
-
-Where you install the certificate depends on where you are terminating TLS (in other words, the first server a visiting user connects to). Generally speaking, you might need to provide the certificate and key to nginx, or to an Elastic Load Balancer (ELB), or to a CDN (e.g. CloudFront or Cloudflare).
-
-##### In nginx
-
-On 18F's Ubuntu AMI, TLS certificates and keys should go in `/etc/nginx/ssl/keys`. Then update your site's vhost's nginx config to point to your decrypted private key, and your certificate chain.
-
-For a `*.18f.us` domain, that may look like this:
+Choose the email address you've configured. SSLMate will give you a final chance to confirm. (The credit card info will not be shown, because 18F has created a bulk purchase.)
 
 ```
-ssl_certificate      /etc/nginx/ssl/keys/star.18f.us-chain.crt;
-ssl_certificate_key  /etc/nginx/ssl/keys/star.18f.us.key;
+============ Order summary ============
+     Host Name: myra.treasury.gov
+       Product: 1 Year Standard SSL
+         Price: $15.95
+    Auto-Renew: Yes
+
+=========== Payment details ===========
+ Credit Card:  ending in
+  Amount Due: $15.95 (USD)
+
+Press ENTER to confirm order (or q to quit):
 ```
 
-**Important**: before restarting the server, test out whether the key and certificate have been prepared and installed successfully by running:
+The SSLMate client will then initiate the email, and will just hang while it waits for you to receive the email and approve the certificate.
 
-```bash
-sudo nginx -t
+```
+Placing order...
+Order complete.
+
+You will soon receive an email at admin@myra.treasury.gov from sslorders@geotrust.com. Follow the instructions in the email to verify your ownership of your domain. Once you've verified ownership, your certs will be automatically downloaded.
+
+If you'd rather do this later, you can hit Ctrl+C and your certs will be delivered over email instead.
+
+Waiting for ownership confirmation...
 ```
 
-If you get no errors, then restart the server:
+After you've done this, the SSLMate client will detect it and drop the certificate, certificate chain onto disk, alongside the private key:
 
-```bash
-sudo service nginx restart
 ```
+Your certificate is ready for use!
+
+           Private key file: myra.treasury.gov.key
+           Certificate file: myra.treasury.gov.crt
+     Certificate chain file: myra.treasury.gov.chain.crt
+Certificate with chain file: myra.treasury.gov.chained.crt
+```
+
+Note that **the private key was never shared with SSLMate**. It was created locally, and the certificate was what SSLMate created server-side and downloaded to disk.
+
+### Loading the cert into Amazon Web Services
+
+If you're using the certificate with an ELB or with CloudFront, you need to upload the key and cert to AWS.
+
+You'll want to install the [AWS CLI tool](https://aws.amazon.com/cli/), and authorize it with your 18F Amazon Web Services credentials.
 
 ##### In an ELB
 
-To use the key and certificate in an ELB in Amazon Web Services:
-
-* First, make a certificate chain that uses **only** the intermediates. The intermediates can be found in [`sites/`](../sites/).
-
-```bash
-cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-intermediates.crt
-```
-
-Then, use the [AWS CLI tool](https://aws.amazon.com/cli/), and run the following command. (Replace each value with the names and files specific to your cert.)
+To upload a certificate for use in an ELB (replace each value with the names and files specific to your cert):
 
 ```bash
 aws iam upload-server-certificate \
@@ -178,21 +173,13 @@ aws iam upload-server-certificate \
   --certificate-chain file://./your-site-intermediates.crt
 ```
 
-Make sure to refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/tls-standards/blob/master/configuration/elb.md) when setting up your ELB.
+**Note:** Refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/tls-standards/blob/master/configuration/elb.md) when setting up your ELB.
 
 ##### In CloudFront
 
-Similar to making an ELB, but a slightly different upload command.
+Run the command below. (Replace each value with the names and files specific to your cert.)
 
-To use the key and certificate in CloudFront in Amazon Web Services:
-
-* First, make a certificate chain that uses **only** the intermediates. The intermediates can be found in [`sites/`](../sites/).
-
-```bash
-cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt > your-site-intermediates.crt
-```
-
-Then, use the [AWS CLI tool](https://aws.amazon.com/cli/), and run the following command. (Replace each value with the names and files specific to your cert.) The `--path` **must** begin with `/cloudfront/`, and end with a path of your choice and a trailing slash, e.g. `/cloudfront/myra-production/`.
+Note that the `--path` **must** begin with `/cloudfront/`, and end with a path of your choice and a trailing slash, e.g. `/cloudfront/myra-production/`.
 
 ```bash
 aws iam upload-server-certificate \
@@ -203,24 +190,4 @@ aws iam upload-server-certificate \
   --path /cloudfront/your-path/
 ```
 
-Make sure that when configuring your CloudFront distribution, you force HTTP traffic to be redirected to HTTPS traffic.
-
-
-#### Publishing the certificate and CSR
-
-We record our certificates and CSRs in a public directory, for ease of management and versioning. Certificate and CSR information is insensitive, and is less easily lost when put in a public repository.
-
-When you are done obtaining a certificate, installing it, and verifying that it's working, publish the following files into `sites/`:
-
-* The certificate request (`.csr`) file.
-* The certificate (`.crt`) for the domain.
-* The full certificate chain (`.crt`) for the domain and its intermediates.
-* A `README.md` containing why the cert was bought, and who purchased it when.
-
-For an example, see [`sites/star.18f.us`](sites/star.18f.us).
-
-#### Resources
-
-* https://konklone.com/post/switch-to-https-now-for-free
-* https://bettercrypto.org/static/applied-crypto-hardening.pdf
-* http://support.f5.com/kb/en-us/solutions/public/11000/400/sol11440.html
+**Note:** When configuring your CloudFront distribution, force HTTP traffic to be redirected to HTTPS traffic.
