@@ -63,7 +63,7 @@ The domain or subdomain should be **fully delegated to 18F.** This means that 18
 ![nameservers](images/route53.png)
 
 * Provide those 4 nameserver addresses to the holder of the parent domain. (The agency with the base domain, or the [.gov registry](https://www.dotgov.gov) in the case of a full domain.)
-* Tell the parent domain to set `NS` records for each of them. The parent domain should _not_ set an SOA record.
+* Tell the parent domain to set **4 NS records** -- one for each of the above nameservers. The parent domain should _not_ set an SOA record.
 
 You can also refer to the [official documentation](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for delegating a subdomain to Route 53.
 
