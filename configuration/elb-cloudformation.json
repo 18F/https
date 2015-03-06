@@ -45,6 +45,7 @@
           { "Name" : "ECDHE-RSA-AES128-SHA256", "Value" : "true" },
           { "Name" : "ECDHE-ECDSA-AES128-SHA", "Value" : "true" },
           { "Name" : "ECDHE-RSA-AES128-SHA", "Value" : "true" },
+          { "Name" : "DHE-DSS-AES128-SHA", "Value" : "true" },
           { "Name" : "ECDHE-ECDSA-AES256-GCM-SHA384", "Value" : "true" },
           { "Name" : "ECDHE-RSA-AES256-GCM-SHA384", "Value" : "true" },
           { "Name" : "ECDHE-ECDSA-AES256-SHA384", "Value" : "true" },
@@ -58,12 +59,9 @@
           { "Name" : "AES256-SHA256", "Value" : "false" },
           { "Name" : "AES256-SHA", "Value" : "false" },
           { "Name" : "DHE-RSA-AES128-SHA", "Value" : "true" },
-          { "Name" : "DHE-DSS-AES128-SHA", "Value" : "true" },
           { "Name" : "CAMELLIA128-SHA", "Value" : "false" },
           { "Name" : "EDH-RSA-DES-CBC3-SHA", "Value" : "false" },
-          { "Name" : "DES-CBC3-SHA", "Value" : "false" },
-          { "Name" : "ECDHE-RSA-RC4-SHA", "Value" : "true" },
-          { "Name" : "RC4-SHA", "Value" : "true" }
+          { "Name" : "DES-CBC3-SHA", "Value" : "true" }
         ],
         "LoadBalancerPorts" : ["443"]
       }]

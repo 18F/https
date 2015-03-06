@@ -99,6 +99,7 @@ AWS comes with a few "predefined" configurations, but does not allow you to save
 - [X] ECDHE-RSA-AES128-SHA256
 - [X] ECDHE-ECDSA-AES128-SHA
 - [X] ECDHE-RSA-AES128-SHA
+- [X] DHE-RSA-AES128-SHA
 - [X] ECDHE-ECDSA-AES256-GCM-SHA384
 - [X] ECDHE-RSA-AES256-GCM-SHA384
 - [X] ECDHE-ECDSA-AES256-SHA384
@@ -111,12 +112,9 @@ AWS comes with a few "predefined" configurations, but does not allow you to save
 - [ ] AES256-GCM-SHA384
 - [ ] AES256-SHA256
 - [ ] AES256-SHA
-- [X] DHE-RSA-AES128-SHA
 - [X] DHE-DSS-AES128-SHA
 - [ ] CAMELLIA128-SHA
 - [ ] EDH-RSA-DES-CBC3-SHA
-- [ ] DES-CBC3-SHA
-- [X] ECDHE-RSA-RC4-SHA
-- [X] RC4-SHA
+- [X] DES-CBC3-SHA
 
-... everything below this should stay unchecked ...
+... Everything below this should stay unchecked. ...
