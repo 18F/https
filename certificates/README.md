@@ -57,13 +57,18 @@ Linking account... Done.
 
 The domain or subdomain should be **fully delegated to 18F.** This means that 18F can administer the DNS for the domain in our own Route 53 infrastructure.
 
-* Create a "Hosted Zone" in Route 53 for the given domain or subdomain.
-* Amazon will automatically generate 4 nameserver addresses:
+* Create a "Hosted Zone" in Route 53 for the given domain or subdomain, e.g. `myra.treasury.gov`. (Amazon will add the trailing dot for you.)
 
-![nameservers](images/route53.png)
+![hosted zone](images/route53.png)
 
-* Provide those 4 nameserver addresses to the holder of the parent domain. (The agency with the base domain, or the [.gov registry](https://www.dotgov.gov) in the case of a full domain.)
+* Amazon will then automatically generate 4 nameserver addresses.
+
+[!nameservers](images/ns-records.png)
+
+* Provide those 4 nameserver addresses to the holder of the parent domain.
 * Tell the parent domain to set **4 NS records** -- one for each of the above nameservers. The parent domain should _not_ set an SOA record.
+
+* Note: **You must include the trailing dot in the NS records that you provide.**
 
 You can also refer to the [official documentation](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for delegating a subdomain to Route 53.
 
