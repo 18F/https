@@ -63,7 +63,7 @@ The domain or subdomain should be **fully delegated to 18F.** This means that 18
 
 * Amazon will then automatically generate 4 nameserver addresses.
 
-[!nameservers](images/ns-records.png)
+![nameservers](images/ns-records.png)
 
 * Provide those 4 nameserver addresses to the holder of the parent domain.
 * Tell the parent domain to set **4 NS records** -- one for each of the above nameservers. The parent domain should _not_ set an SOA record.
