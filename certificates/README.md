@@ -69,6 +69,7 @@ The domain or subdomain should be **fully delegated to 18F.** This means that 18
 * Tell the parent domain to set **4 NS records** -- one for each of the above nameservers. The parent domain should _not_ set an SOA record.
 
 * Note: **You must include the trailing dot in the NS records that you provide.**
+* Note: If you're delegating the DNS for an existing subdomain that's already in production use, you may want to take extra precautions when changing the NS records (since invalid NS records can leave the domain inaccessible). If possible, you may consider rolling out DNS changes out to an internal organization first, double checking things, and then rolling the DNS changes out to the public.
 
 You can also refer to the [official documentation](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for delegating a subdomain to Route 53.
 
