@@ -4,10 +4,22 @@
 
 When you use an ELB as the public-facing endpoint for your project, you can choose to use it in two ways:
 
-1. Terminate HTTPS there and pass unencrypted traffic to its backend instances.
 1. Pass encrypted TCP packets straight through to the backend instances, which then terminate HTTPS on the application server or reverse proxy (e.g. nginx).
+1. Terminate HTTPS there and pass unencrypted traffic to its backend instances.
 
-This document focuses on #1 - **terminating HTTPS on an ELB**.
+We recommend #1 -- TCP pass-through -- as it affords you total control over TLS termination. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses various limitations of ELBs. This is [documented below](#).
+
+However, if you do use an ELB to terminate TLS, the [section below that](#) discusses the downsides of ELB termination in more detail, so that you know what you're giving up. You can then use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
+
+### #1 - Passing through encrypted TCP on an ELB
+
+To put an ELB into "TCP mode", select "TCP" (do **not** select "HTTPS" or "SSL (Secure TCP)") for both sides of the configuration, and select port 443.
+
+![elb in tcp mode](images/elb-tcp-mode.png)
+
+That should be it! You do not need to assign an HTTPS certificate to the ELB, because it will not be decrypting any traffic. If you need your backend instances to see the IP address of the original incoming request (not the IP address of the ELB itself) then you should look at [enabling Proxy Protocol support](http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/enable-proxy-protocol.html).
+
+### #2 - Terminating HTTPS on an ELB
 
 If you terminate HTTPS on an Amazon Elastic Load Balancer (ELB) for your project, you have limited control over your TLS configuration.
 
@@ -27,14 +39,6 @@ When you let the ELB terminate HTTPS, you **do not have control** over:
 * [Secure client-initiated renegotiation](https://community.qualys.com/blogs/securitylabs/2011/10/31/tls-renegotiation-and-denial-of-service-attacks) (enabled, which may be bad)
 * choice of elliptic curve algorithm (locked to 256-bits, which is fine)
 * TLS TCP buffer sizes (haven't tested AWS' default)
-
-Because of this, it's recommended that you choose #2 -- passing through encrypted TCP packets to terminate HTTPS on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
-
-However, if you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
-
-### Downsides of terminating HTTPS on ELBs
-
-There are security, privacy, and performance issues with using ELBs to terminate TLS connections.
 
 #### Limited DH parameters
 
