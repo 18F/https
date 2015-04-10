@@ -1,18 +1,25 @@
-## TLS on an Elastic Load Balancer
+## Terminating HTTPS on an Elastic Load Balancer
 
 (**[Jump right to the ELB configuration choices.](#configuration-choices)**)
 
-If you use an Amazon Elastic Load Balancer (ELB) as the public-facing endpoint for your project, you have limited control over your TLS configuration.
+When you use an ELB as the public-facing endpoint for your project, you can choose to use it in two ways:
+
+1. Terminate HTTPS there and pass unencrypted traffic to its backend instances.
+1. Pass encrypted TCP packets straight through to the backend instances, which then terminate HTTPS on the application server or reverse proxy (e.g. nginx).
+
+This document focuses on #1 - **terminating HTTPS on an ELB**.
+
+If you terminate HTTPS on an Amazon Elastic Load Balancer (ELB) for your project, you have limited control over your TLS configuration.
 
 You **have control** over:
 
 * certificate signing algorithm (e.g. SHA-256)
-* private key algorithm and bit-length (e.g. RSA 4096-bit or ECDSA 256-bit)
+* private key algorithm and bit-length (e.g. RSA 2048-bit or ECDSA 256-bit)
 * [HTTP Strict Transport Security](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) (if the header is set on backend instances)
 * supported TLS protocol versions
 * allowed ciphersuites
 
-You **do not have control** over:
+When you let the ELB terminate HTTPS, you **do not have control** over:
 
 * [DH parameters](#limited-dh-parameters) (locked to 1024-bits, which is bad)
 * [OCSP stapling](#ocsp-stapling)
@@ -21,11 +28,11 @@ You **do not have control** over:
 * choice of elliptic curve algorithm (locked to 256-bits, which is fine)
 * TLS TCP buffer sizes (haven't tested AWS' default)
 
-Because of this, it's recommended that you terminate TLS on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
+Because of this, it's recommended that you choose #2 -- passing through encrypted TCP packets to terminate HTTPS on one or more EC2 instances directly. By doing so, you can use [18F's standard nginx configuration](nginx/ssl.rules), which addresses all of the above.
 
-If you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
+However, if you do use an ELB to terminate TLS, the next section discusses the downsides of ELBs in more detail, so that you know what you're giving up. Then, use the [ELB configuration choices](#configuration-choices) we've identified that provide the strongest possible current TLS configuration for an ELB.
 
-### Downsides of ELBs
+### Downsides of terminating HTTPS on ELBs
 
 There are security, privacy, and performance issues with using ELBs to terminate TLS connections.
 
