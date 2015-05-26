@@ -1,4 +1,4 @@
-## TLS at 18F
+## Transport Layer Security (TLS) at 18F
 
 18F is an all-TLS shop: all of our [websites](https://18f.gsa.gov/2014/11/13/why-we-use-https-in-every-gov-website-we-make/) and [APIs](https://github.com/18F/api-standards#always-use-https) enforce encryption.
 
