@@ -2,13 +2,13 @@
 
 Most importantly:
 
-**18F issues and manages the TLS certificates for all projects we host.**
+**18F issues and manages the HTTPS certificates for all projects we host.**
 
-Exceptions should be very rare, and for a very good reason. If we cannot issue and reissue our own TLS certificates for an application, then we cannot control whether the site remains available to visitors, and we cannot control the very first interaction any visiting browser or client has with that application.
+Exceptions should be very rare, and for a very good reason. If we cannot issue and reissue our own HTTPS certificates for an application, then we cannot control whether the site remains available to visitors, and we cannot control the very first interaction any visiting browser or client has with that application.
 
 ### Certificates over the command line
 
-We currently use a CLI-based certificate issuer — **[SSLMate](https://sslmate.com)** — to issue TLS certificates in a rapid, flexible, manageable way.
+We currently use a CLI-based certificate issuer — **[SSLMate](https://sslmate.com)** — to issue HTTPS certificates in a rapid, flexible, manageable way.
 
 You will need to obtain **login credentials** from DevOps, and you should treat those credentials as you would any other production credentials at 18F.
 
