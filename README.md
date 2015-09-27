@@ -35,9 +35,7 @@ apt-get update
 apt-get install sslmate
 ```
 
-For Ubuntu 14.10, replace `ubuntu1404` with `ubuntu1410` above.
-
-Not working? Using Debian? Refer to the [official SSLMate install instructions](https://sslmate.com/help/install) for the latest details.
+For other operating systems or Ubuntu versions, see [installation instructions](https://sslmate.com/help/getting_started#install).
 
 ### Log into SSLMate
 
@@ -57,7 +55,7 @@ Linking account... Done.
 
 The domain or subdomain should be **fully delegated to 18F.** This means that 18F can administer the DNS for the domain in our own Route 53 infrastructure.
 
-* Create a "Hosted Zone" in Route 53 for the given domain or subdomain, e.g. `myra.treasury.gov`. (Amazon will add the trailing dot for you.)
+* Create a "Hosted Zone" in Route 53 for the given domain or subdomain, e.g. `analytics.usa.gov`. (Amazon will add the trailing dot for you.)
 
 ![hosted zone](images/route53.png)
 
@@ -73,57 +71,17 @@ The domain or subdomain should be **fully delegated to 18F.** This means that 18
 
 You can also refer to the [official documentation](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for delegating a subdomain to Route 53.
 
-### Set up an email address
-
-(**Note**: work is ongoing to automate this process in its entirety, and to remove the email configuration and approval step.)
-
-To confirm domain ownership, SSLMate will need to email a special email address that uses either the base domain, _or the subdomain_ that you are purchasing the certificate for.
-
-There are a few acceptable prefixes. For example, `admin@myra.treasury.gov` can approve a certificate for `https://myra.treasury.gov`.
-
-How you set up this receiving email address is up to you. You will need to create `MX` records within Route 53 that point email to the service of your choice.
-
-18F has a [Mandrill](https://mandrillapp.com) account that you can configure to receive emails for a given domain. Consult with the DevOps team if that's how you want to do it.
-
-
 ### Purchase the certificate
 
-Initiate a certificate purchase for a domain or subdomain:
+Initiate a certificate purchase for a domain or subdomain. We typically use [DNS approval](https://sslmate.com/help/approval/dns) to validate our ownership over the domain.
 
 ```bash
-sslmate buy myra.treasury.gov
+sslmate buy analytics.usa.gov --approval=dns
 ```
-
-SSLMate will ask you where to send the approval email. You will need to have [configured the domain for email](#set-up-an-email-address).
-
-(**Note**: work is ongoing to automate this process in its entirety, and to remove the email configuration and approval step.)
-
-```
-Generating private key... Done.
-Generating CSR... Done.
-Submitting order...
-
-We need to send you an email to verify that you own this domain.
-Where should we send this email?
-
-1. webmaster@treasury.gov
-2. postmaster@treasury.gov
-3. hostmaster@treasury.gov
-4. administrator@treasury.gov
-5. admin@treasury.gov
-6. webmaster@myra.treasury.gov
-7. postmaster@myra.treasury.gov
-8. hostmaster@myra.treasury.gov
-9. administrator@myra.treasury.gov
-10. admin@myra.treasury.gov
-Enter 1-10 (or q to quit):
-```
-
-Choose the email address you've configured. SSLMate will give you a final chance to confirm. (The credit card info will not be shown, because 18F has created a bulk purchase.)
 
 ```
 ============ Order summary ============
-     Host Name: myra.treasury.gov
+     Host Name: analytics.usa.gov
        Product: 1 Year Standard SSL
          Price: $15.95
     Auto-Renew: Yes
@@ -135,28 +93,46 @@ Choose the email address you've configured. SSLMate will give you a final chance
 Press ENTER to confirm order (or q to quit):
 ```
 
-The SSLMate client will then initiate the email, and will just hang while it waits for you to receive the email and approve the certificate.
+Press Enter to place the order. Real hash values have been replaced with `____` below.
+
+```
+Generating private key... Done.
+Generating CSR... Done.
+Adding DNS approval record for analytics.usa.gov...
+Notice: unable to automatically configure DNS approval for analytics.usa.gov: No DNS approval handler available for _________.analytics.usa.gov. or ______.usa.gov.. Specify the --verbose option for details.
+
+Please add one of the following DNS records to your domain's DNS:
+
+    ____________________.analytics.usa.gov. CNAME ____________________.comodoca.com.
+    _________________________.usa.gov. CNAME __________________.comodoca.com.
+
+You may remove any DNS record you previously added for this certificate.
+You should leave the new DNS record in place as long as this certificate
+is in use.
+
+Press ENTER when done (or q to quit): 
+```
+
+The SSLMate client will then provide you a DNS record to add. Choose the DNS record that corresponds to the level of the domain which has been delegated to 18F (in the above case, the top-most one, `analytics.usa.gov`).
+
+Add the CNAME record to Route 53, and then hit Enter.
 
 ```
 Placing order...
 Order complete.
 
-You will soon receive an email at admin@myra.treasury.gov from sslorders@geotrust.com. Follow the instructions in the email to verify your ownership of your domain. Once you've verified ownership, your certs will be automatically downloaded.
-
-If you'd rather do this later, you can hit Ctrl+C and your certs will be delivered over email instead.
-
 Waiting for ownership confirmation...
 ```
 
-After you've done this, the SSLMate client will detect it and drop the certificate, certificate chain onto disk, alongside the private key:
+After a long while (it may take several minutes), the SSLMate client will confirm the domain and drop the certificate, certificate chain onto disk, alongside the private key:
 
 ```
 Your certificate is ready for use!
 
-           Private key file: myra.treasury.gov.key
-           Certificate file: myra.treasury.gov.crt
-     Certificate chain file: myra.treasury.gov.chain.crt
-Certificate with chain file: myra.treasury.gov.chained.crt
+           Private key file: analytics.usa.gov.key
+           Certificate file: analytics.usa.gov.crt
+     Certificate chain file: analytics.usa.gov.chain.crt
+Certificate with chain file: analytics.usa.gov.chained.crt
 ```
 
 Note that **the private key was never shared with SSLMate**. It was created locally, and the certificate was what SSLMate created server-side and downloaded to disk.
@@ -185,7 +161,7 @@ aws iam upload-server-certificate \
 
 Run the command below. (Replace each value with the names and files specific to your cert.)
 
-Note that the `--path` **must** begin with `/cloudfront/`, and end with a path of your choice and a trailing slash, e.g. `/cloudfront/myra-production/`.
+Note that the `--path` **must** begin with `/cloudfront/`, and end with a path of your choice and a trailing slash, e.g. `/cloudfront/analytics-production/`.
 
 ```bash
 aws iam upload-server-certificate \
