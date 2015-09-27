@@ -14,7 +14,7 @@ You will need to obtain **login credentials** from DevOps, and you should treat 
 
 18F DevOps has made a bulk purchase of certificates, so you now _do not_ require pre-approval from DevOps and Operations to obtain one.
 
-Buy single-domain certificates as needed. However, please consult with DevOps before purchasing a wildcard certificate (e.g. `*.18f.us`), as they are on the expensive side.
+Buy single-domain certificates as needed. However, please consult with DevOps before purchasing a wildcard certificate (e.g. `*.18f.gov`), as they are on the expensive side.
 
 If you've already installed and set up SSLMate, [skip ahead to the purchasing instructions](#set-up-the-domain)
 
