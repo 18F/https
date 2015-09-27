@@ -16,7 +16,7 @@ You will need to obtain **login credentials** from DevOps, and you should treat 
 
 Buy single-domain certificates as needed. However, please consult with DevOps before purchasing a wildcard certificate (e.g. `*.18f.gov`), as they are on the expensive side.
 
-If you've already installed and set up SSLMate, [skip ahead to the purchasing instructions](#set-up-the-domain)
+If you've already installed and set up SSLMate, [skip ahead to the purchasing instructions]#set-up-the-domain)
 
 ### Install SSLMate
 
@@ -154,8 +154,6 @@ aws iam upload-server-certificate \
   --private-key file://./your-site.key \
   --certificate-chain file://./your-site-intermediates.crt
 ```
-
-**Note:** Refer to [18F's preferred TLS configuration for ELBs](https://github.com/18F/tls-standards/blob/master/configuration/elb.md) when setting up your ELB.
 
 ##### In CloudFront
 
