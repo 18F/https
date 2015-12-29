@@ -151,7 +151,7 @@ To upload a certificate for use in an ELB (replace each value with the names and
 aws iam upload-server-certificate \
   --server-certificate-name a-new-cert-name \
   --certificate-body file://./yoursite.gov.crt \
-  --private-key file://./your-site.key \
+  --private-key file://./yoursite.gov.key \
   --certificate-chain file://./yoursite.gov.chain.crt
 ```
 
@@ -165,7 +165,7 @@ Note that the `--path` **must** begin with `/cloudfront/`, and end with a path o
 aws iam upload-server-certificate \
   --server-certificate-name a-new-cert-name \
   --certificate-body file://./yoursite.gov.crt \
-  --private-key file://./your-site.key \
+  --private-key file://./yoursite.gov.key \
   --certificate-chain file://./yoursite.gov.chain.crt \
   --path /cloudfront/your-path/
 ```
