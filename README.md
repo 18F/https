@@ -6,15 +6,19 @@ Most importantly:
 
 Exceptions should be very rare, and for a very good reason. If we cannot issue and reissue our own HTTPS certificates for an application, then we cannot control whether the site remains available to visitors, and we cannot control the very first interaction any visiting browser or client has with that application.
 
+### 18F Project Teams
+
+18F project teams are in charge of their site(s) certificate(s). The Infrastructure group is available to help as necessary. If a project is using the cloud.gov platform then that team can also help. Ultimately, responsibility for the certificates is squarely with the project team.
+
 ### Certificates over the command line
 
 We currently use a CLI-based certificate issuer — **[SSLMate](https://sslmate.com)** — to issue HTTPS certificates in a rapid, flexible, manageable way.
 
-You will need to obtain **login credentials** from DevOps, and you should treat those credentials as you would any other production credentials at 18F.
+You will need to obtain **login credentials** from Infrastructure, and you should treat those credentials as you would any other production credentials at 18F.
 
-18F DevOps has made a bulk purchase of certificates, so you now _do not_ require pre-approval from DevOps and Operations to obtain one.
+18F Infrastructure has made a bulk purchase of certificates, so you now _do not_ require pre-approval from Infrastructure and Operations to obtain one.
 
-Buy single-domain certificates as needed. However, please consult with DevOps before purchasing a wildcard certificate (e.g. `*.18f.gov`), as they are on the expensive side.
+Buy single-domain certificates as needed. However, please consult with Infrastructure before purchasing a wildcard certificate (e.g. `*.18f.gov`), as they are on the expensive side.
 
 If you've already installed and set up SSLMate, [skip ahead to the purchasing instructions]#set-up-the-domain)
 
